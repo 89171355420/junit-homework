@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:6.0.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly('org.junit.platform:junit-platform-launcher')
+}
+
+// чтобы в консоли было видно, что печатают тесты
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+        showStandardStreams = true
+    }
+}
+
+// задача 1 — запускает все тесты в проекте
+tasks.register('runAllTests') {
+    group = 'homework'
+    description = 'Запускает все тесты в проекте'
+    dependsOn tasks.named('test')
+}
+
+// задача 2 — запускается после первой и пишет в консоль Test run is over
+tasks.register('testRunIsOver') {
+    group = 'homework'
+    description = 'Пишет в консоль Test run is over после завершения всех тестов'
+    dependsOn tasks.named('runAllTests')
+    doLast {
+        println 'Test run is over'
+    }
+}
